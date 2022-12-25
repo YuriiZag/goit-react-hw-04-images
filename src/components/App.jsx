@@ -11,7 +11,7 @@ export const App = () => {
   const onFormSubmit = data => {
     
     setSearchRequest(data);
-  
+    
   };
 
   const toggleModal = () => {

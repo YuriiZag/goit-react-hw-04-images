@@ -20,45 +20,8 @@ export const ImageGallery = ({ request, openModal }) => {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    if (request === '') {
-      setStatus('idle');
-    } else {
-      setStatus('pending');
-      setPage(1);
-      fetch(
-        `https://pixabay.com/api/?q=${request}&page=1&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
-      )
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          }
-          return Promise.reject(
-            new Error(`Oops! Nothing found with search request ${request}`)
-          );
-        })
-        .then(pictures => {
-          const dataArray = pictures.hits.map(
-            ({ id, tags, largeImageURL, previewURL }) => {
-              return {
-                id,
-                tags,
-                largeImageURL,
-                previewURL,
-              };
-            }
-          );
-          if (dataArray.length > 0) {
-            setStatus('resolved');
-            setPicsArray(dataArray);
-          } else {
-            setStatus('rejected');
-          }
-        })
-        .catch(error => {
-          setStatus('rejected');
-        });
-    }
-  }, [request]);
+    setPicsArray([])
+  }, [request])
 
   useEffect(() => {
     if (request === '') {
@@ -99,14 +62,14 @@ export const ImageGallery = ({ request, openModal }) => {
           setStatus('rejected');
         });
     }
-  }, [page]);
+  }, [page, request]);
 
   const onLoadMoreCLick = e => {
     setPage(prevState => (prevState = prevState + 1));
   };
 
   const onClickHandler = e => {
-    console.dir(e.target);
+
     const data = {
       fullSize: e.target.dataset.fullSize,
       tags: e.target.alt,
@@ -114,7 +77,7 @@ export const ImageGallery = ({ request, openModal }) => {
     openModal(data);
   };
 
-  console.log(picsArray);
+
 
   if (status === 'idle') {
     return <IdleText>Enter search request!</IdleText>;
